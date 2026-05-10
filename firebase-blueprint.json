@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User specific goals and settings for English learning.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "dailyGoalMinutes": { "type": "integer" },
+        "currentLevel": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced"] },
+        "interests": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "dailyGoalMinutes"]
+    },
+    "ImmersionLog": {
+      "title": "Immersion Log",
+      "description": "A record of an English immersion activity.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["read", "listen", "watch"] },
+        "title": { "type": "string" },
+        "duration": { "type": "integer", "description": "Duration in minutes" },
+        "contentUrl": { "type": "string" },
+        "notes": { "type": "string" },
+        "difficulty": { "type": "integer", "description": "1-5 rating" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "type", "title", "duration", "timestamp"]
+    },
+    "VocabularyItem": {
+      "title": "Vocabulary Item",
+      "description": "A word or phrase learned during immersion.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "logId": { "type": "string", "description": "Optional link to the log where it was found" },
+        "word": { "type": "string" },
+        "definition": { "type": "string" },
+        "exampleSentence": { "type": "string" },
+        "context": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "word", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Profiles for each user."
+    },
+    "/users/{userId}/logs/{logId}": {
+      "schema": "ImmersionLog",
+      "description": "Daily immersion activity logs for a specific user."
+    },
+    "/users/{userId}/vocabulary/{vocabId}": {
+      "schema": "VocabularyItem",
+      "description": "Learned words for a specific user."
+    }
+  }
+}
